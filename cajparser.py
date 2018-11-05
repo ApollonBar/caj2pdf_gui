@@ -1,7 +1,8 @@
-import os
-import struct
-from subprocess import check_output, STDOUT, CalledProcessError
-from utils import fnd, fnd_all, add_outlines, fnd_rvrs, fnd_unuse_no
+from os import remove
+from struct import unpack
+from subprocess import run,PIPE
+
+from utils import add_outlines, fnd, fnd_all, fnd_rvrs, fnd_unuse_no
 
 
 class CAJParser(object):
@@ -9,7 +10,7 @@ class CAJParser(object):
         self.filename = filename
         try:
             with open(filename, "rb") as caj:
-                fmt = struct.unpack("4s", caj.read(4))[0].replace(b'\x00', b'').decode("gb18030")
+                fmt = unpack("4s", caj.read(4))[0].replace(b'\x00', b'').decode("gb18030")
             if fmt == "CAJ":
                 self.format = "CAJ"
                 self._PAGE_NUMBER_OFFSET = 0x10
@@ -20,22 +21,22 @@ class CAJParser(object):
                 self._TOC_NUMBER_OFFSET = 0x158
             else:
                 self.format = None
-                raise SystemExit("Unknown file type.")
+                raise Exception("Unknown file type.")
         except UnicodeDecodeError:
-            raise SystemExit("Unknown file type.")
+            raise Exception("Unknown file type.")
 
     @property
     def page_num(self):
         with open(self.filename, "rb") as caj:
             caj.seek(self._PAGE_NUMBER_OFFSET)
-            [page_num] = struct.unpack("i", caj.read(4))
+            [page_num] = unpack("i", caj.read(4))
             return page_num
 
     @property
     def toc_num(self):
         with open(self.filename, "rb") as caj:
             caj.seek(self._TOC_NUMBER_OFFSET)
-            [toc_num] = struct.unpack("i", caj.read(4))
+            [toc_num] = unpack("i", caj.read(4))
             return toc_num
 
     def get_toc(self):
@@ -43,7 +44,7 @@ class CAJParser(object):
         with open(self.filename, "rb") as caj:
             for i in range(self.toc_num):
                 caj.seek(self._TOC_NUMBER_OFFSET + 4 + 0x134 * i)
-                toc_bytes = struct.unpack("256s24s12s12si", caj.read(0x134))
+                toc_bytes = unpack("256s24s12s12si", caj.read(0x134))
                 ttl_end = toc_bytes[0].find(b"\x00")
                 title = toc_bytes[0][0:ttl_end].decode("gb18030").encode("utf-8")
                 pg_end = toc_bytes[2].find(b"\x00")
@@ -71,9 +72,9 @@ class CAJParser(object):
 
         # Extract original PDF data (and add header)
         caj.seek(self._PAGE_NUMBER_OFFSET + 4)
-        [pdf_start_pointer] = struct.unpack("i", caj.read(4))
+        [pdf_start_pointer] = unpack("i", caj.read(4))
         caj.seek(pdf_start_pointer)
-        [pdf_start] = struct.unpack("i", caj.read(4))
+        [pdf_start] = unpack("i", caj.read(4))
         pdf_end = fnd_all(caj, b"endobj")[-1] + 6
         pdf_length = pdf_end - pdf_start
         caj.seek(pdf_start)
@@ -93,12 +94,12 @@ class CAJParser(object):
             startobj = max(startobj1, startobj2)
             length = fnd(pdf, b" ", startobj) - startobj
             pdf.seek(startobj)
-            [no] = struct.unpack(str(length) + "s", pdf.read(length))
+            [no] = unpack(str(length) + "s", pdf.read(length))
             if int(no) not in obj_no:
                 obj_no.append(int(no))
                 obj_len = addr - startobj + 6
                 pdf.seek(startobj)
-                [obj] = struct.unpack(str(obj_len) + "s", pdf.read(obj_len))
+                [obj] = unpack(str(obj_len) + "s", pdf.read(obj_len))
                 pdf_data += (b"\r" + obj)
         pdf_data += b"\r\n"
         with open("pdf.tmp", 'wb') as f:
@@ -111,7 +112,7 @@ class CAJParser(object):
         for addr in inds_addr:
             length = fnd(pdf, b" ", addr) - addr
             pdf.seek(addr)
-            [ind] = struct.unpack(str(length) + "s", pdf.read(length))
+            [ind] = unpack(str(length) + "s", pdf.read(length))
             inds.append(int(ind))
         # get pages_obj_no list containing distinct elements
         # & find missing pages object(s) -- top pages object(s) in pages_obj_no
@@ -140,7 +141,7 @@ class CAJParser(object):
                 tmp_addr = fnd(pdf, bytes("\r{0} 0 obj".format(pon), 'utf-8'))
                 while True:
                     pdf.seek(tmp_addr)
-                    [_str] = struct.unpack("6s", pdf.read(6))
+                    [_str] = unpack("6s", pdf.read(6))
                     if _str == b"Parent":
                         break
                     elif _str == b"endobj":
@@ -180,23 +181,23 @@ class CAJParser(object):
                     addr = fnd_rvrs(pdf, b"\r", ind)
                     length = fnd(pdf, b" ", addr) - addr
                     pdf.seek(addr)
-                    [ind] = struct.unpack(str(length) + "s", pdf.read(length))
+                    [ind] = unpack(str(length) + "s", pdf.read(length))
                     kids_dict[tpon].append(int(ind))
                     type_addr = fnd(pdf, b"/Type", addr) + 5
                     tmp_addr = fnd(pdf, b"/", type_addr) + 1
                     pdf.seek(tmp_addr)
-                    [_type] = struct.unpack("5s", pdf.read(5))
+                    [_type] = unpack("5s", pdf.read(5))
                     if _type == b"Pages":
                         cnt_addr = fnd(pdf, b"/Count ", addr) + 7
                         pdf.seek(cnt_addr)
-                        [_str] = struct.unpack("1s", pdf.read(1))
+                        [_str] = unpack("1s", pdf.read(1))
                         cnt_len = 0
                         while _str not in [b" ", b"\r", b"/"]:
                             cnt_len += 1
                             pdf.seek(cnt_addr + cnt_len)
-                            [_str] = struct.unpack("1s", pdf.read(1))
+                            [_str] = unpack("1s", pdf.read(1))
                         pdf.seek(cnt_addr)
-                        [cnt] = struct.unpack(str(cnt_len) + "s", pdf.read(cnt_len))
+                        [cnt] = unpack(str(cnt_len) + "s", pdf.read(cnt_len))
                         count_dict[tpon] += int(cnt)
                     else:  # _type == b"Page"
                         count_dict[tpon] += 1
@@ -210,17 +211,24 @@ class CAJParser(object):
             f.write(pdf_data)
 
         # Use mutool to repair xref
-        try:
-            check_output(["mutool", "clean", "pdf.tmp", "pdf_toc.pdf"], stderr=STDOUT)
-        except CalledProcessError as e:
-            print(e.output.decode("utf-8"))
-            raise SystemExit("Command mutool returned non-zero exit status " + str(e.returncode))
+        # raise CalledProcessError(code=6) after pack the gui program
+        # try:
+        #     check_output(["mutool", "clean", "pdf.tmp", "pdf_toc.pdf"], stderr=STDOUT)
+        # except CalledProcessError as e:
+        #     print(e.output.decode("utf-8"))
+        #     raise Exception("Command mutool returned non-zero exit status " + str(e.returncode))
+        p = run(['mutool', 'clean', 'pdf.tmp', 'pdf_toc.pdf'])
+        # code = system('mutool clean pdf.tmp pdf_toc.pdf')
+        # if code != 0:
+        #     raise Exception("Command mutool returned non-zero exit status " + str(code))
+        if p.returncode != 0:
+            raise Exception("Command mutool returned non-zero exit status " + str(p.returncode))
 
         # Add Outlines
         add_outlines(self.get_toc(), "pdf_toc.pdf", dest)
         pdf.close()
-        os.remove("pdf.tmp")
-        os.remove("pdf_toc.pdf")
+        remove("pdf.tmp")
+        remove("pdf_toc.pdf")
 
     def _convert_hn(self, dest):
-        raise SystemExit("Unsupported file type.")
+        raise Exception("Unsupported file type.")

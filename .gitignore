@@ -125,3 +125,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# build
+main.spec
+build/
+__pycache__/
