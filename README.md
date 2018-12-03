@@ -12,7 +12,7 @@ A simple gui program for [caj2pdf project](https://github.com/JeziL/caj2pdf)
 
 ## Release
 
-[OneDrive](https://1drv.ms/f/s!ApqgfoqX1ihmi2hH_3nCyS2lw9JC)
+[click here](https://github.com/ElonH/caj2pdf_gui/releases)
 
 ## License
 
