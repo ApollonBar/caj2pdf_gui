@@ -35,6 +35,7 @@ class myWindow(QMainWindow, Ui_MainWindow):
         return txt[:-4] + '.pdf'
 
     def show_caj(self):
+        self.logger.clear()
         self.log('show')
         if self.check_file_exist() is False:
             self.log('--------')
