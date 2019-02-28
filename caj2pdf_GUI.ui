@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>382</width>
-    <height>428</height>
+    <width>369</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,29 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0" colspan="4">
-     <widget class="QLabel" name="label_2">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>15</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>caj2pdf 核心项目源码: (转换不了看这里)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="4">
-     <widget class="QListWidget" name="logger"/>
-    </item>
-    <item row="5" column="0" colspan="4">
-     <widget class="QLineEdit" name="lineEdit">
-      <property name="text">
-       <string>https://github.com/JeziL/caj2pdf</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="maximumSize">
@@ -51,40 +28,31 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="convert">
-      <property name="maximumSize">
-       <size>
-        <width>93</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>转换文件</string>
-      </property>
-      <property name="text">
-       <string>convert</string>
+    <item row="1" column="0" colspan="3">
+     <widget class="QLineEdit" name="caj_address">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
      </widget>
     </item>
-    <item row="2" column="2">
-     <widget class="QPushButton" name="outlines">
-      <property name="maximumSize">
-       <size>
-        <width>93</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;从 CAJ 文件中提取大纲信息并添加至转化后的 PDF 文件&lt;/p&gt;&lt;p&gt;遇到不支持的文件类型或 Bug 时，可用 CAJViewer 打印 PDF 文件，并用这条命令为其添加大纲&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <item row="1" column="3">
+     <widget class="QToolButton" name="caj_file_open_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="text">
-       <string>outlines</string>
+       <string>...</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0" colspan="2">
-     <widget class="QLabel" name="label_3">
+    <item row="2" column="0" colspan="2">
+     <widget class="QLabel" name="label_4">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -92,11 +60,28 @@
        </size>
       </property>
       <property name="text">
-       <string>caj2pdf GUI项目源码:</string>
+       <string>pdf for outlines:</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0" colspan="3">
+     <widget class="QLineEdit" name="pdf_address">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3">
+     <widget class="QToolButton" name="pdf_file_open_button">
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
      <widget class="QPushButton" name="show_button">
       <property name="maximumSize">
        <size>
@@ -112,20 +97,85 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="3">
-     <widget class="QLineEdit" name="line_address"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QToolButton" name="file_open_button">
+    <item row="4" column="1">
+     <widget class="QPushButton" name="convert">
+      <property name="maximumSize">
+       <size>
+        <width>93</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>转换文件</string>
+      </property>
       <property name="text">
-       <string>...</string>
+       <string>convert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QPushButton" name="outlines">
+      <property name="maximumSize">
+       <size>
+        <width>93</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;从 CAJ 文件中提取大纲信息并添加至转化后的 PDF 文件&lt;/p&gt;&lt;p&gt;遇到不支持的文件类型或 Bug 时，可用 CAJViewer 打印 PDF 文件，并用这条命令为其添加大纲&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>outlines</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="4">
+     <widget class="QListWidget" name="logger">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" colspan="3">
+     <widget class="QLabel" name="label_2">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>caj2pdf 核心项目源码: (转换不了看这里)</string>
       </property>
      </widget>
     </item>
     <item row="7" column="0" colspan="4">
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="text">
+       <string>https://github.com/JeziL/caj2pdf</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" colspan="2">
+     <widget class="QLabel" name="label_3">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>caj2pdf GUI项目源码:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0" colspan="4">
      <widget class="QLineEdit" name="lineEdit_2">
       <property name="text">
-       <string>https://github.com/cnms520/caj2pdf_gui</string>
+       <string>https://github.com/ElonH/caj2pdf_gui</string>
       </property>
      </widget>
     </item>
