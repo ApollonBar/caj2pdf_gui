@@ -1,10 +1,18 @@
 # caj2pdf_gui
 
-A simple gui program for [caj2pdf project](https://github.com/JeziL/caj2pdf)
+A simple QT5 Application for [caj2pdf project](https://github.com/JeziL/caj2pdf)
+
+为[caj2pdf 项目](https://github.com/JeziL/caj2pdf)制作了一个QT5图形界面
 
 ![capture_convert](README.assets/capture_convert.png)
 
+Adding CAJ file path and clicking 'convert' button translating CAJ to PDF file with outlines
+
 ![capture_outlines](README.assets/capture_outlines.png)
+
+1. Adding CAJ 
+2. Adding correspondent PDF file without outlines
+3. Finally, clicking 'outlines' button appending outlines to PDF extracted in CAJ file
 
 ## Build platform
 
