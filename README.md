@@ -12,7 +12,7 @@ Adding CAJ file path and clicking 'convert' button translating CAJ to PDF file w
 
 1. Adding CAJ 
 2. Adding correspondent PDF file without outlines
-3. Finally, clicking 'outlines' button appending outlines to PDF extracted in CAJ file
+3. Finally, clicking 'outlines' button appending outlines extracted in CAJ file to PDF
 
 ## Build platform
 
